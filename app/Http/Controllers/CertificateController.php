@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CertificateRequest;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\CertficateService;
 
 class CertificateController extends Controller
 {
+    protected $certificateService;
+    public function __construct(CertficateService $certificateService)
+    {
+        $this->certificateService = $certificateService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -22,32 +28,11 @@ class CertificateController extends Controller
      */
     public function store(CertificateRequest $request)
     {
-        if ($request->validated()) {
-            $post = $request->input();
-            $isDownloadRequest = array_key_exists('downloadpdf', $post);
-
-            $student = $this->makeStudentName($post);
-            $filename = $student . '.pdf';
-
-            $qrLink = env('APP_QR_LINK') ?? env('APP_URL');
-            $pdf = Pdf::loadView('certificates.certificate', [
-                'number' => $post['number'],
-                'course' => $post['course'],
-                'student' => $student,
-                'finished_at' => $post['finished_at'],
-                'link' => $qrLink . $post['number'],
-            ]);
-
-            return $isDownloadRequest ? $pdf->download($filename) : $pdf->stream($filename);
+        $post = $request->validated();
+        if ($post) {
+            $this->certificateService->setData($post);
+            return $this->certificateService->renderPdf();
         }
-    }
-
-    /*
-     * Concats first and last name from input to make completely Full Name of a student
-     */
-    protected function makeStudentName($data)
-    {
-        return ucfirst($data['first_name']) . " " . ucfirst($data['last_name']);
     }
 
     protected function checkGraphicLibrary()

@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CertificateRequest extends FormRequest
 {
+    CONST ACTION_DOWNLOAD = 'download';
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,6 +29,7 @@ class CertificateRequest extends FormRequest
             'first_name'=> 'required|max:16',
             'last_name'=> 'required|max:32',
             'finished_at'=> 'required|date',
+            'action' => 'required'
         ];
     }
 

@@ -12,7 +12,7 @@
                 <p> {{ date('l jS \of F Y h:i', strtotime($finished_at)) }}</p>
             </div>
             <div class="qrcode">
-                <img src="data:image/png;base64, {!! base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::size(130)->color(99, 138, 215)->generate($link)) !!} ">
+                <img src="data:image/png;base64, {!! $qr !!} ">
             </div>
         </div>
     </div>
