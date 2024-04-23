@@ -53,9 +53,12 @@ class CertficateService
         ]);
     }
 
-    public function renderPdf()
+    public function renderPdf($data)
     {
+        $this->setData($data);
+
         $this->makePdf();
+
         $filename = $this->getStudent() . '.pdf';
         return $this->data['action'] === CertificateRequest::ACTION_DOWNLOAD ? $this->pdfResource->download($filename) : $this->pdfResource->stream($filename);
     }

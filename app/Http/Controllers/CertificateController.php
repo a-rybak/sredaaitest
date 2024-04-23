@@ -30,8 +30,7 @@ class CertificateController extends Controller
     {
         $post = $request->validated();
         if ($post) {
-            $this->certificateService->setData($post);
-            return $this->certificateService->renderPdf();
+            return $this->certificateService->renderPdf($post);
         }
     }
 
